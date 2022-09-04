@@ -239,11 +239,15 @@ export const release = async (
     // others won't previously this was duplicating content for most which
     // no one wants
     const workflowBody = releaseBody(config) || "";
+    console.log(`Workflow body:\n${workflowBody}----`);
     const existingReleaseBody = existingRelease.data.body || "";
+    console.log(`Existing body:\n${existingReleaseBody}----`);
     let body: string;
     if (config.input_append_body && workflowBody && existingReleaseBody) {
+      console.log(`Appending workflow body to the existing body`);
       body = existingReleaseBody + "\n" + workflowBody;
     } else {
+      console.log(`Using existing body`);
       body = workflowBody || existingReleaseBody;
     }
 
