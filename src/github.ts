@@ -202,12 +202,14 @@ export const release = async (
     // you can't get a an existing draft by tag
     // so we must find one in the list of all releases
     if (config.input_draft) {
+      console.log(`Looking for the release by tag name "${tag}"`);
       for await (const response of releaser.allReleases({
         owner,
         repo
       })) {
         let release = response.data.find(release => release.tag_name === tag);
         if (release) {
+          console.log(`Returning ${release}`);
           return release;
         }
       }
