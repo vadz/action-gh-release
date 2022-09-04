@@ -201,24 +201,27 @@ export const release = async (
   try {
     // you can't get a an existing draft by tag
     // so we must find one in the list of all releases
+    let existingRelease;
     if (config.input_draft) {
       console.log(`Looking for the release by tag name "${tag}"`);
       for await (const response of releaser.allReleases({
         owner,
         repo
       })) {
-        let release = response.data.find(release => release.tag_name === tag);
+        let release = response.data.find(release => release.name === config.input_name);
         if (release) {
           console.log(`Returning ${release}`);
-          return release;
+          existingRelease = release;
+          break;
         }
       }
+    } else {
+      existingRelease = await releaser.getReleaseByTag({
+        owner,
+        repo,
+        tag
+      });
     }
-    let existingRelease = await releaser.getReleaseByTag({
-      owner,
-      repo,
-      tag
-    });
 
     const release_id = existingRelease.data.id;
     let target_commitish: string;
